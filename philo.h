@@ -17,7 +17,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <pthread.h>
-#include <sys/time.h>
+# include <sys/time.h>
 
 #define LEFT (philosopher_id + number_of_philosophers - 1) % number_of_philosophers
 #define RIGHT (philosopher_id + 1) % number_of_philosophers

@@ -6,7 +6,7 @@
 /*   By: adnane <adnane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 17:00:39 by adnane            #+#    #+#             */
-/*   Updated: 2023/05/08 15:56:48 by adnane           ###   ########.fr       */
+/*   Updated: 2023/05/08 17:32:29 by adnane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct s_philosopher_info
 	int				id;
 	long long		last_meal;
 	int				ate;
+	int				eating_count;
 	struct s_thread	*thread_info;
 }	t_philosopher_info;
 
@@ -40,6 +41,7 @@ typedef struct s_thread
 	pthread_t			*philosophers;
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		shared_print;
+	int					e_c;
 	long long			very_start;
 	t_philosopher_info	*info;
 }	t_thread;
@@ -50,12 +52,14 @@ void		eat(t_philosopher_info *info);
 void		put_down_forks(t_philosopher_info *info);
 void		sleep_and_think(t_philosopher_info *info);
 long long	get_period(long long start_time);
+int			is_num(char **argv);
 void		set_thread_params(t_thread *thread, char **argv);
 void		create_philosopher(t_thread *thread, int i);
 void		create_philosophers(t_thread *thread);
-void		create_death_checker(t_thread *thread);
+void		create_death_eat_checker(t_thread *thread);
 void		join_destroy_philosophers(t_thread *thread);
 void		*death_checker(void *arg);
+void		*eat_counter(void *arg);
 int			is_valid_int(long num);
 void		print_message(long long very_start, int id,
 				const char *message, pthread_mutex_t *shared_mutex);

@@ -6,7 +6,7 @@
 /*   By: adnane <adnane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 22:09:11 by adnane            #+#    #+#             */
-/*   Updated: 2023/05/08 14:36:46 by adnane           ###   ########.fr       */
+/*   Updated: 2023/05/08 17:36:55 by adnane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void	eat(t_philosopher_info *info)
 	info->ate = 1;
 	usleep(info->thread_info->time_to_eat * 1000);
 	info->last_meal = get_period(info->thread_info->very_start);
+	if (info->thread_info->e_c && info->eating_count < info->thread_info->e_c)
+		info->eating_count++;
 	info->ate = 0;
 }
 

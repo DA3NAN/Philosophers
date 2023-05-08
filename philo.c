@@ -6,7 +6,7 @@
 /*   By: adnane <adnane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:59:14 by adnane            #+#    #+#             */
-/*   Updated: 2023/05/08 16:02:32 by adnane           ###   ########.fr       */
+/*   Updated: 2023/05/08 17:39:03 by adnane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,44 @@ void	*death_checker(void *arg)
 	}
 }
 
+void	*eat_counter(void *arg)
+{
+	t_thread	*thread;
+	int			i;
+	int			done_eating_count;
+
+	thread = (t_thread *)arg;
+	done_eating_count = 0;
+	while (1)
+	{
+		done_eating_count = 0;
+		i = -1;
+		while (++i < thread->num_philo)
+		{
+			if (thread->info[i].eating_count >= thread->e_c)
+				done_eating_count++;
+		}
+		if (done_eating_count == thread->num_philo)
+		{
+			pthread_mutex_lock(&thread->shared_print);
+			printf("All philosophers have eaten enough.\n");
+			pthread_mutex_unlock(&thread->shared_print);
+			exit (0);
+		}
+		usleep(10000);
+	}
+}
+
 void	create_threads(t_thread thread, char **argv)
 {
 	int	i;
 
 	set_thread_params(&thread, argv);
-	if (!is_valid_int(thread.time_to_die) || !is_valid_int(thread.time_to_sleep)
-		|| !is_valid_int(thread.time_to_eat) || !is_valid_int(thread.num_philo))
+	if (!is_num(argv) || !is_valid_int(thread.time_to_die)
+		|| !is_valid_int(thread.time_to_sleep)
+		|| !is_valid_int(thread.time_to_eat)
+		|| !is_valid_int(thread.num_philo)
+		|| (thread.e_c && !is_valid_int(thread.e_c)))
 	{
 		printf("All arguments must be positive integers.\n");
 		return ;
@@ -54,7 +85,7 @@ void	create_threads(t_thread thread, char **argv)
 		pthread_mutex_init(&thread.forks[i], NULL);
 	pthread_mutex_init(&thread.shared_print, NULL);
 	create_philosophers(&thread);
-	create_death_checker(&thread);
+	create_death_eat_checker(&thread);
 	join_destroy_philosophers(&thread);
 }
 
@@ -63,10 +94,11 @@ int	main(int argc, char **argv)
 	t_thread	thread;
 	int			i;
 
-	if (argc != 5)
+	if (argc != 5 && argc != 6)
 	{
 		printf("Usage: ./philo <number_of_philosophers> ");
-		printf("<time_to_die> <time_to_eat> <time_to_sleep>\n");
+		printf("<time_to_die> <time_to_eat> <time_to_sleep>");
+		printf("[number_of_times_each_philosopher_must_eat]\n");
 		return (1);
 	}
 	thread.num_philo = atoi(argv[1]);

@@ -6,7 +6,7 @@
 /*   By: adnane <adnane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:44:57 by adnane            #+#    #+#             */
-/*   Updated: 2023/05/08 16:49:26 by adnane           ###   ########.fr       */
+/*   Updated: 2023/05/09 15:11:20 by adnane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	set_thread_params(t_thread *thread, char **argv)
 	thread->time_to_die = atoi(argv[2]);
 	thread->time_to_sleep = atoi(argv[4]);
 	thread->time_to_eat = atoi(argv[3]);
-	thread->e_c = 0;
+	thread->e_c = -1;
 	if (argv[5])
 		thread->e_c = atoi(argv[5]);
 }
@@ -52,10 +52,10 @@ void	create_death_eat_checker(t_thread *thread)
 	pthread_t	eat_count;
 
 	pthread_create(&death_checker_thread, NULL, death_checker, thread);
-	if (thread->e_c)
+	if (thread->e_c != -1)
 		pthread_create(&eat_count, NULL, eat_counter, thread);
 	pthread_join(death_checker_thread, NULL);
-	if (thread->e_c)
+	if (thread->e_c != -1)
 		pthread_join(eat_count, NULL);
 }
 

@@ -6,7 +6,7 @@
 /*   By: adnane <adnane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:59:14 by adnane            #+#    #+#             */
-/*   Updated: 2023/05/08 17:39:03 by adnane           ###   ########.fr       */
+/*   Updated: 2023/05/09 12:51:03 by adnane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	*eat_counter(void *arg)
 		if (done_eating_count == thread->num_philo)
 		{
 			pthread_mutex_lock(&thread->shared_print);
-			printf("All philosophers have eaten enough.\n");
+			printf("|%lld| All philosophers have eaten enough.\n", get_period(thread->very_start));
 			pthread_mutex_unlock(&thread->shared_print);
 			exit (0);
 		}

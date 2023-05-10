@@ -6,7 +6,7 @@
 /*   By: adnane <adnane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:44:57 by adnane            #+#    #+#             */
-/*   Updated: 2023/05/10 16:59:06 by adnane           ###   ########.fr       */
+/*   Updated: 2023/05/10 17:03:42 by adnane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,13 @@ void	join_destroy_philosophers(t_thread *thread)
 	i = -1;
 	while (++i < thread->num_philo)
 		pthread_mutex_destroy(&thread->forks[i]);
+}
+
+void	free_all(t_thread *thread)
+{
+	free(thread->philosophers);
+	free(thread->forks);
+	free(thread->info);
+	free(thread->lm_mutex);
+	free(thread->ec_mutex);
 }

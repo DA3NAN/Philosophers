@@ -6,7 +6,7 @@
 /*   By: adnane <adnane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 17:00:39 by adnane            #+#    #+#             */
-/*   Updated: 2023/05/10 16:58:53 by adnane           ###   ########.fr       */
+/*   Updated: 2023/05/10 17:04:11 by adnane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void		join_destroy_philosophers(t_thread *thread);
 void		*death_checker(void *arg);
 void		*eat_counter(void *arg);
 int			is_valid_int(char *str);
+void		free_all(t_thread *thread);
 void		print_message(long long very_start, int id,
 				const char *message, pthread_mutex_t *shared_mutex);
 

@@ -6,7 +6,7 @@
 /*   By: adnane <adnane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:59:14 by adnane            #+#    #+#             */
-/*   Updated: 2023/05/10 17:02:37 by adnane           ###   ########.fr       */
+/*   Updated: 2023/05/10 17:14:06 by adnane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	*death_checker(void *arg)
 				exit(0);
 			}
 		}
+		usleep(1000);
 	}
 }
 
@@ -53,15 +54,16 @@ void	*eat_counter(void *arg)
 		{
 			if (thread->info[i].eating_count >= thread->e_c)
 				done_eating_count++;
+			if (done_eating_count == thread->num_philo)
+			{
+				pthread_mutex_lock(&thread->shared_print);
+				printf("|%lld| All philosophers have eaten enough.\n",
+					get_period(thread->very_start));
+				pthread_mutex_unlock(&thread->shared_print);
+				exit (0);
+			}
 		}
-		if (done_eating_count == thread->num_philo)
-		{
-			pthread_mutex_lock(&thread->shared_print);
-			printf("|%lld| All philosophers have eaten enough.\n",
-				get_period(thread->very_start));
-			pthread_mutex_unlock(&thread->shared_print);
-			exit (0);
-		}
+		usleep(1000);
 	}
 }
 
@@ -110,8 +112,6 @@ int	main(int argc, char **argv)
 	thread.ec_mutex = malloc(thread.num_philo * sizeof(pthread_mutex_t));
 	thread.info = malloc(thread.num_philo * sizeof(t_philosopher_info));
 	create_threads(thread, argv);
-	free(thread.philosophers);
-	free(thread.forks);
-	free(thread.info);
+	free_all(&thread);
 	return (0);
 }

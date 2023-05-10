@@ -6,7 +6,7 @@
 /*   By: adnane <adnane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:59:14 by adnane            #+#    #+#             */
-/*   Updated: 2023/05/10 17:19:05 by adnane           ###   ########.fr       */
+/*   Updated: 2023/05/10 17:35:21 by adnane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	*eat_counter(void *arg)
 		i = -1;
 		while (++i < thread->num_philo)
 		{
+			pthread_mutex_lock(thread->info[i].eating_count_mutex);
 			if (thread->info[i].eating_count >= thread->e_c)
 				done_eating_count++;
 			if (done_eating_count == thread->num_philo)
@@ -62,6 +63,7 @@ void	*eat_counter(void *arg)
 				pthread_mutex_unlock(&thread->shared_print);
 				exit (0);
 			}
+			pthread_mutex_unlock(thread->info[i].eating_count_mutex);
 		}
 		usleep(1000);
 	}

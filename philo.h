@@ -6,7 +6,7 @@
 /*   By: adnane <adnane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 17:00:39 by adnane            #+#    #+#             */
-/*   Updated: 2023/05/08 17:32:29 by adnane           ###   ########.fr       */
+/*   Updated: 2023/05/10 16:58:53 by adnane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,10 @@ typedef struct s_philosopher_info
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*shared_mutex;
+	pthread_mutex_t	*eating_count_mutex;
+	pthread_mutex_t	*last_meal_mutex;
 	int				id;
 	long long		last_meal;
-	int				ate;
 	int				eating_count;
 	struct s_thread	*thread_info;
 }	t_philosopher_info;
@@ -41,6 +42,8 @@ typedef struct s_thread
 	pthread_t			*philosophers;
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		shared_print;
+	pthread_mutex_t		*lm_mutex;
+	pthread_mutex_t		*ec_mutex;
 	int					e_c;
 	long long			very_start;
 	t_philosopher_info	*info;
@@ -60,7 +63,7 @@ void		create_death_eat_checker(t_thread *thread);
 void		join_destroy_philosophers(t_thread *thread);
 void		*death_checker(void *arg);
 void		*eat_counter(void *arg);
-int			is_valid_int(long num);
+int			is_valid_int(char *str);
 void		print_message(long long very_start, int id,
 				const char *message, pthread_mutex_t *shared_mutex);
 

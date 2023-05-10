@@ -6,7 +6,7 @@
 /*   By: adnane <adnane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 14:30:08 by adnane            #+#    #+#             */
-/*   Updated: 2023/05/08 17:36:59 by adnane           ###   ########.fr       */
+/*   Updated: 2023/05/10 16:48:57 by adnane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,19 @@ void	print_message(long long very_start, int id,
 	pthread_mutex_unlock(shared_mutex);
 }
 
-int	is_valid_int(long num)
+int	is_valid_int(char *str)
 {
+	int			i;
+	long long	num;
+
+	i = 0;
+	while (str[i])
+	{
+		if (i > 10)
+			return (0);
+		i++;
+	}
+	num = atoi(str);
 	if (num < 0 || num > INT_MAX)
 		return (0);
 	return (1);

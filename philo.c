@@ -6,7 +6,7 @@
 /*   By: adnane <adnane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:59:14 by adnane            #+#    #+#             */
-/*   Updated: 2023/05/09 15:23:52 by adnane           ###   ########.fr       */
+/*   Updated: 2023/05/10 17:02:37 by adnane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ void	*death_checker(void *arg)
 		i = -1;
 		while (++i < thread->num_philo)
 		{
-			curr = get_period(thread->very_start);
-			if (thread->info[i].ate == 1)
-				curr = 0;
-			if (curr - thread->info[i].last_meal >= thread->time_to_die)
+			pthread_mutex_lock(thread->info[i].last_meal_mutex);
+			curr = get_period(thread->very_start) - thread->info[i].last_meal;
+			pthread_mutex_unlock(thread->info[i].last_meal_mutex);
+			if (curr >= thread->time_to_die)
 			{
 				print_message(thread->very_start, thread->info[i].id + 1,
 					"died", thread->info->shared_mutex);
@@ -70,18 +70,13 @@ void	create_threads(t_thread thread, char **argv)
 	int	i;
 
 	set_thread_params(&thread, argv);
-	if (!is_num(argv) || !is_valid_int(thread.time_to_die)
-		|| !is_valid_int(thread.time_to_sleep)
-		|| !is_valid_int(thread.time_to_eat)
-		|| !is_valid_int(thread.num_philo)
-		|| (thread.e_c != -1 && !is_valid_int(thread.e_c)))
-	{
-		printf("All arguments must be positive integers.\n");
-		return ;
-	}
 	i = -1;
 	while (++i < thread.num_philo)
+	{
 		pthread_mutex_init(&thread.forks[i], NULL);
+		pthread_mutex_init(&thread.lm_mutex[i], NULL);
+		pthread_mutex_init(&thread.ec_mutex[i], NULL);
+	}
 	pthread_mutex_init(&thread.shared_print, NULL);
 	create_philosophers(&thread);
 	create_death_eat_checker(&thread);
@@ -99,9 +94,20 @@ int	main(int argc, char **argv)
 		printf("[number_of_times_each_philosopher_must_eat]\n");
 		return (1);
 	}
+	if (!is_num(argv) || !is_valid_int(argv[2])
+		|| !is_valid_int(argv[4])
+		|| !is_valid_int(argv[3])
+		|| !is_valid_int(argv[1])
+		|| (argv[5] && !is_valid_int(argv[5])))
+	{
+		printf("All arguments must be positive integers.\n");
+		return (1);
+	}
 	thread.num_philo = atoi(argv[1]);
 	thread.philosophers = malloc(thread.num_philo * sizeof(pthread_t));
 	thread.forks = malloc(thread.num_philo * sizeof(pthread_mutex_t));
+	thread.lm_mutex = malloc(thread.num_philo * sizeof(pthread_mutex_t));
+	thread.ec_mutex = malloc(thread.num_philo * sizeof(pthread_mutex_t));
 	thread.info = malloc(thread.num_philo * sizeof(t_philosopher_info));
 	create_threads(thread, argv);
 	free(thread.philosophers);

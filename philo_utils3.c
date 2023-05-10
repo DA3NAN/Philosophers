@@ -6,7 +6,7 @@
 /*   By: adnane <adnane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:44:57 by adnane            #+#    #+#             */
-/*   Updated: 2023/05/09 15:11:20 by adnane           ###   ########.fr       */
+/*   Updated: 2023/05/10 16:59:06 by adnane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,13 @@ void	set_thread_params(t_thread *thread, char **argv)
 void	create_philosopher(t_thread *thread, int i)
 {
 	thread->info[i].id = i;
+	thread->info[i].eating_count_mutex = &thread->ec_mutex[i];
+	thread->info[i].last_meal_mutex = &thread->lm_mutex[i];
 	thread->info[i].left_fork = &thread->forks[i];
 	thread->info[i].right_fork = &thread->forks[(i + 1) % thread->num_philo];
 	thread->info[i].shared_mutex = &thread->shared_print;
 	thread->info[i].last_meal = get_period(thread->very_start);
 	thread->info[i].thread_info = thread;
-	thread->info[i].ate = 0;
 	thread->info[i].eating_count = 0;
 	pthread_create(&thread->philosophers[i],
 		NULL, philosopher, &thread->info[i]);

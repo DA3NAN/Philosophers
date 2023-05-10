@@ -6,7 +6,7 @@
 /*   By: adnane <adnane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:59:14 by adnane            #+#    #+#             */
-/*   Updated: 2023/05/10 17:14:06 by adnane           ###   ########.fr       */
+/*   Updated: 2023/05/10 17:19:05 by adnane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ void	create_threads(t_thread thread, char **argv)
 	pthread_mutex_init(&thread.shared_print, NULL);
 	create_philosophers(&thread);
 	create_death_eat_checker(&thread);
-	join_destroy_philosophers(&thread);
+	join_philosophers(&thread);
+	destroy_mutexes(&thread);
 }
 
 int	main(int argc, char **argv)

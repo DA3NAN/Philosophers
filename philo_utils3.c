@@ -6,7 +6,7 @@
 /*   By: adnane <adnane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:44:57 by adnane            #+#    #+#             */
-/*   Updated: 2023/05/10 17:03:42 by adnane           ###   ########.fr       */
+/*   Updated: 2023/05/10 17:18:27 by adnane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,17 +60,27 @@ void	create_death_eat_checker(t_thread *thread)
 		pthread_join(eat_count, NULL);
 }
 
-void	join_destroy_philosophers(t_thread *thread)
+void	join_philosophers(t_thread *thread)
 {
 	int	i;
 
 	i = -1;
 	while (++i < thread->num_philo)
 		pthread_join(thread->philosophers[i], NULL);
+}
+
+void	destroy_mutexes(t_thread *thread)
+{
+	int	i;
+
 	pthread_mutex_destroy(&thread->shared_print);
 	i = -1;
 	while (++i < thread->num_philo)
+	{
 		pthread_mutex_destroy(&thread->forks[i]);
+		pthread_mutex_destroy(&thread->lm_mutex[i]);
+		pthread_mutex_destroy(&thread->ec_mutex[i]);
+	}
 }
 
 void	free_all(t_thread *thread)

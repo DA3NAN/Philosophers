@@ -1,27 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_utils3.c                                     :+:      :+:    :+:   */
+/*   threads_creation.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adnane <adnane@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 15:44:57 by adnane            #+#    #+#             */
-/*   Updated: 2023/05/10 17:26:48 by adnane           ###   ########.fr       */
+/*   Updated: 2023/05/11 17:41:44 by adnane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	set_thread_params(t_thread *thread, char **argv)
-{
-	thread->very_start = get_period(0);
-	thread->time_to_die = atoi(argv[2]);
-	thread->time_to_sleep = atoi(argv[4]);
-	thread->time_to_eat = atoi(argv[3]);
-	thread->e_c = -1;
-	if (argv[5])
-		thread->e_c = atoi(argv[5]);
-}
 
 void	create_philosopher(t_thread *thread, int i)
 {
@@ -81,13 +70,4 @@ void	destroy_mutexes(t_thread *thread)
 		pthread_mutex_destroy(&thread->lm_mutex[i]);
 		pthread_mutex_destroy(&thread->ec_mutex[i]);
 	}
-}
-
-void	free_all(t_thread *thread)
-{
-	free(thread->philosophers);
-	free(thread->forks);
-	free(thread->info);
-	free(thread->lm_mutex);
-	free(thread->ec_mutex);
 }
